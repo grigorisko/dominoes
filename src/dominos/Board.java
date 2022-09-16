@@ -28,6 +28,8 @@ public class Board {
         for(Domino domino: player.getPlayerHand()) {
             if(domino.getFirstNumber()==currentBoard.get(currentBoard.size()-1).getSecondNumber()
             ||domino.getSecondNumber()==currentBoard.get(0).getFirstNumber()
+            ||domino.getFirstNumber()==currentBoard.get(0).getFirstNumber()
+            ||domino.getSecondNumber()==currentBoard.get(currentBoard.size()-1).getSecondNumber()
             ||domino.getFirstNumber()==0 || domino.getSecondNumber()==0
             ||currentBoard.get(0).getFirstNumber()==0
             ||currentBoard.get(currentBoard.size()-1).getSecondNumber()==0){

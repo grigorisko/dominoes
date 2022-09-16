@@ -46,8 +46,14 @@ public class Player {
                 return;
             }
         }
-        drawFromBoneyard(board);
-        PlayDomino(board,gameState);
+        if(!board.getBoneyard().isEmpty()) {
+            drawFromBoneyard(board);
+            PlayDomino(board, gameState);
+        }
+        else {
+            gameState.setWhoseTurn(1);
+            gameState.setTurnsWithoutPlay(gameState.getTurnsWithoutPlay()+1);
+        }
     }
     public List<Domino> getPlayerHand() {
         return playerHand;
