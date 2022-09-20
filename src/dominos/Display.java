@@ -99,7 +99,14 @@ public class Display extends Application{
 
     private Text playerDominos;
 
-
+    /**
+     * The launch method for the application. Creates all the GUI
+     * elements and displays them.
+     * @param stage the primary stage for this application, onto which
+     * the application scene can be set.
+     * Applications may create other stages, if needed, but they will not be
+     * primary stages.
+     */
     @Override
     public void start(Stage stage) {
         main.start(this);
@@ -108,7 +115,8 @@ public class Display extends Application{
         input = new MouseInput(board,this, gameState);
         boneyardCount = new Text();
         boneyardCount.setFont(new Font(20));
-        boneyardCount.setText("Boneyard contains "+board.getBoneyard().size()+" dominos");
+        boneyardCount.setText("Boneyard contains "+
+                board.getBoneyard().size()+" dominos");
         boneyardCount.setTranslateX(500);
         boneyardCount.setTranslateY(20);
         computerCount = new Text();
@@ -137,18 +145,29 @@ public class Display extends Application{
         stage.show();
     }
 
-
+    /**
+     * This method loads a buffered image from the class path
+     * @param filepath The image path
+     * @return The BufferedImage
+     */
     private BufferedImage loadImage(String filepath) {
         BufferedImage image = null;
         try {
-            image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream(filepath)));
+            image = ImageIO.read(Objects.requireNonNull
+                    (getClass().getResourceAsStream(filepath)));
         } catch (IOException e) {
             return null;
         }
         return image;
     }
 
-    public void DisplayPlayerHand() {
+    /**
+     * This method goes through the player's hand,
+     * creates a DominoGUI for each domino in it
+     * based on the domino numbers
+     * and displays it on the screen.
+     */
+    public void displayPlayerHand() {
         int count = 1;
         ImageView dominoImg = null;
         for (Domino domino:main.getHumanPlayer().getPlayerHand()
@@ -361,7 +380,15 @@ public class Display extends Application{
 
     }
 
-    public void SelectDomino(Domino domino, DominoGUI dominoGUI) {
+    /**
+     * This method handles the selection of a domino
+     * on the player's hand when it is clicked.
+     * Creates buttons for the available options,
+     * and highlights the domino.
+     * @param domino
+     * @param dominoGUI
+     */
+    public void selectDomino(Domino domino, DominoGUI dominoGUI) {
         dominoGUI.setHighlightImg(new ImageView(HIGHLIGHTIMG));
         Button rotateDomino = new Button("Rotate");
         rotateDomino.setOnMouseClicked(input.rotateDomino(domino));
@@ -380,7 +407,12 @@ public class Display extends Application{
         pane.getChildren().add(playLeft);
     }
 
-    public void RotateDomino(Domino domino) {
+    /**
+     * This method rotates the domino when
+     * the rotate button is clicked.
+     * @param domino The domino to rotate.
+     */
+    public void rotateDomino(Domino domino) {
         int first = domino.getFirstNumber();
         int second = domino.getSecondNumber();
         domino.setFirstNumber(second);
@@ -388,27 +420,35 @@ public class Display extends Application{
         RefreshState();
     }
 
-    public void PlayDomino(Domino domino,String side) {
+    /**
+     * This method tries to play the selected domino
+     * when the button is clicked.
+     * Displays a popup if the attempted move
+     * is invalid.
+     * @param domino domino to play
+     * @param side side to play the domino
+     */
+    public void playDomino(Domino domino, String side) {
         if (board.getCurrentBoard().isEmpty()) {
-            board.TryMove(domino, side);
+            board.tryMove(domino, side);
             main.getHumanPlayer().getPlayerHand().remove(domino);
             gameState.setTurnsWithoutPlay(0);
             gameState.setWhoseTurn(2);
             gameState.setLastPlayer(1);
             RefreshState();
             if (!main.isGameOver()) {
-                ComputerTurn();
+                computerTurn();
             }
         }
         else {
-            if(board.TryMove(domino,side)) {
+            if(board.tryMove(domino,side)) {
                 main.getHumanPlayer().getPlayerHand().remove(domino);
                 gameState.setTurnsWithoutPlay(0);
                 gameState.setWhoseTurn(2);
                 gameState.setLastPlayer(1);
                 RefreshState();
                 if(!main.isGameOver()) {
-                    ComputerTurn();
+                    computerTurn();
                 }
             }
             else {
@@ -419,7 +459,11 @@ public class Display extends Application{
         }
     }
 
-    public void ComputerTurn(){
+    /**
+     * This method handles the computer's turn
+     * and refreshes the state of the board after.
+     */
+    public void computerTurn(){
 
         if (!board.checkForAvailableMove(main.getComputerPlayer())
                 &&board.getBoneyard().size()==0) {
@@ -428,12 +472,18 @@ public class Display extends Application{
             main.isGameOver();
         }
         else {
-            main.getComputerPlayer().PlayDomino(board, gameState);
+            main.getComputerPlayer().playComputerDomino(board, gameState);
             RefreshState();
             main.isGameOver();
         }
     }
 
+    /**
+     * This method displays the dominos in play
+     * in the middle of the screen. Contains the logic
+     * to offset the rows based on information from the board
+     * and each domino's row variable.
+     */
     public void DisplayBoard() {
         int topRowCount = 1;
         int bottomRowCount = 1;
@@ -666,7 +716,13 @@ public class Display extends Application{
 
     }
 
-    public void DrawFromBoneyard() {
+    /**
+     * This method draws a domino from the boneyard
+     * for the player when the button is clicked
+     * and there is no available move.
+     * If there is an available move, display a popup.
+     */
+    public void drawFromBoneyard() {
         if(!board.checkForAvailableMove(main.getHumanPlayer())) {
             if(!board.getBoneyard().isEmpty()) {
                 main.getHumanPlayer().drawFromBoneyard(board);
@@ -675,7 +731,8 @@ public class Display extends Application{
             }
             else {
                 gameState.setWhoseTurn(2);
-                gameState.setTurnsWithoutPlay(gameState.getTurnsWithoutPlay()+1);
+                gameState.setTurnsWithoutPlay
+                        (gameState.getTurnsWithoutPlay()+1);
                 RefreshState();
                 main.isGameOver();
 
@@ -689,10 +746,14 @@ public class Display extends Application{
         }
     }
 
+    /**
+     * This method refreshes the display with the new information.
+     * Updates the text, repositions the board and player hand.
+     */
     public void RefreshState(){
         pane.getChildren().clear();
         DisplayBoard();
-        DisplayPlayerHand();
+        displayPlayerHand();
         pane.getChildren().add(boneyardCount);
         pane.getChildren().add(computerCount);
         pane.getChildren().add(drawFromBoneyard);
@@ -707,12 +768,16 @@ public class Display extends Application{
                 gameState.setWhoseTurn(2);
                 gameState.setTurnsWithoutPlay(gameState.getTurnsWithoutPlay() + 1);
                 if(!main.isGameOver()) {
-                    ComputerTurn();
+                    computerTurn();
                 }
             }
         }
     }
 
+    /**
+     * Getter for the scene Pane
+     * @return the Pane
+     */
     public Pane getPane() {
         return pane;
     }

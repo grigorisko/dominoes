@@ -3,7 +3,12 @@ package dominos;
 import javafx.application.Application;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-
+/**
+ * Name: Vasileios Grigorios Kourakos
+ * The main class for the GUI version of the game.
+ * Starts the game, checks if the game is over
+ * and checks who the winner is.
+ */
 public class MainGUI {
     private Board board = new Board();
     private Player humanPlayer = new Player(true, 1);
@@ -11,16 +16,32 @@ public class MainGUI {
     private GameState gameState = new GameState();
     private Display display;
 
+    /**
+     * The main method of the program.
+     * Launches the JavaFX application from the Display class.
+     * @param args Command line arguments
+     */
+
     public static void main (String [] args ) {
         Application.launch(Display.class, args);
     }
 
+    /**
+     * Starts the game by initializing the board and
+     * player hands.
+     * @param display The display
+     */
     public void start(Display display) {
         board.initializeDominos();
         humanPlayer.drawAtStart(board);
         computerPlayer.drawAtStart(board);
         this.display=display;
     }
+
+    /**
+     * Checks if the game is over
+     * @return True if game is over, false if not
+     */
     public boolean isGameOver() {
         if(board.getBoneyard().isEmpty()) {
             if (gameState.getTurnsWithoutPlay() == 2) {
@@ -45,6 +66,10 @@ public class MainGUI {
         return false;
     }
 
+    /**
+     * This method checks who the winner is
+     * and creates the text to display.
+     */
     private void checkWinner() {
         int playerScore = 0;
         int computerScore = 0;
@@ -89,18 +114,34 @@ public class MainGUI {
         display.getPane().getChildren().add(endGameText);
     }
 
+    /**
+     * Getter for the board
+     * @return the board
+     */
     public Board getBoard() {
         return board;
     }
 
+    /**
+     * Getter for the human player
+     * @return The human player
+     */
     public Player getHumanPlayer() {
         return humanPlayer;
     }
 
+    /**
+     * Getter for the computer player
+     * @return The computer player
+     */
     public Player getComputerPlayer() {
         return computerPlayer;
     }
 
+    /**
+     * Getter for the game state
+     * @return The game state
+     */
     public GameState getGameState() {
         return gameState;
     }

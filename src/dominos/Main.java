@@ -1,5 +1,10 @@
 package dominos;
-
+/**
+ * Name: Vasileios Grigorios Kourakos
+ * The main class for the command line version of the game.
+ * Has the game loop, checks if the game is over
+ * and checks who the winner is.
+ */
 public class Main {
     private Board board = new Board();
     private Player humanPlayer = new Player(true, 1);
@@ -7,12 +12,25 @@ public class Main {
     private GameState gameState = new GameState();
     private KeyboardInput keyboardInput = new KeyboardInput();
     private static Main main;
-    private TextCom textCom = new TextCom(humanPlayer,computerPlayer, keyboardInput);
+    private TextCom textCom =
+            new TextCom(humanPlayer,computerPlayer, keyboardInput);
+
+    /**
+     * The main method of the program.
+     * Creates a new non static instance of Main
+     * and runs it.
+     * @param args Command line arguments
+     */
     public static void main(String[] args) {
         main = new Main();
         main.start();
     }
 
+    /**
+     * The method used to run the non-static main object.
+     * Initializes the board, players and starts the game
+     * loop
+     */
     public void start() {
         board.initializeDominos();
         humanPlayer.drawAtStart(board);
@@ -22,6 +40,11 @@ public class Main {
         }
     }
 
+    /**
+     * This method checks to see if the game is over
+     * If not, continue the game loop
+     * @return True if over, false if not
+     */
     public boolean isGameOver() {
         if(board.getBoneyard().isEmpty()) {
             if (gameState.getTurnsWithoutPlay() == 2) {
@@ -44,6 +67,11 @@ public class Main {
         return false;
     }
 
+    /**
+     * This method checks who the winner is based on the
+     * number of dots on the dominos of each player's hand.
+     * Also prints out the game ending messages.
+     */
     private void checkWinner() {
         int playerScore = 0;
         int computerScore = 0;

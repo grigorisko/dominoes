@@ -1,18 +1,41 @@
 package dominos;
-
+/**
+ * Name: Vasileios Grigorios Kourakos
+ * This class handles the command line communication
+ * with the player.
+ */
 public class TextCom {
     private Player humanPlayer;
     private Player computerPlayer;
     private KeyboardInput keyboardInput;
+
+    /**
+     * The constructor of the TextCom class
+     * @param humanPlayer The human player object
+     * @param computerPlayer The computer player object
+     * @param keyboardInput The keyboardInput object
+     */
     public TextCom(Player humanPlayer, Player computerPlayer, KeyboardInput keyboardInput) {
         this.humanPlayer = humanPlayer;
         this.computerPlayer = computerPlayer;
         this.keyboardInput = keyboardInput;
     }
+
+    /**
+     * This method handles each turn of the game.
+     * If it is the human player turn, goes through
+     * all the command line communication, and handles
+     * player input. Otherwise, just calls the computer turn
+     * logic from the board.
+     * @param gameState The game state
+     * @param board The board
+     */
     public void nextTurn(GameState gameState, Board board){
         if (gameState.getWhoseTurn()==1) {
-            System.out.println("Computer has "+computerPlayer.getPlayerHand().size() + " dominos");
-            System.out.println("Boneyard contains " + board.getBoneyard().size() + " dominos");
+            System.out.println("Computer has " +
+                    computerPlayer.getPlayerHand().size() + " dominos");
+            System.out.println("Boneyard contains " +
+                    board.getBoneyard().size() + " dominos");
             String topRow = "";
             String bottomRow = "";
             for(Domino domino: board.getCurrentBoard()) {
@@ -51,7 +74,8 @@ public class TextCom {
                 System.out.println("Boneyard is empty and there are no" +
                                     " available moves");
                 gameState.setWhoseTurn(2);
-                gameState.setTurnsWithoutPlay(gameState.getTurnsWithoutPlay()+1);
+                gameState.setTurnsWithoutPlay
+                        (gameState.getTurnsWithoutPlay()+1);
             }
             else {
                 String input = keyboardInput.getPlayerInput();
@@ -75,14 +99,16 @@ public class TextCom {
                                     dominoToPlay.setFirstNumber(right);
                                     dominoToPlay.setSecondNumber(left);
                                 }
-                                if(board.TryMove(dominoToPlay, side)) {
-                                    humanPlayer.getPlayerHand().remove(dominoInput);
+                                if(board.tryMove(dominoToPlay, side)) {
+                                    humanPlayer.getPlayerHand().remove
+                                            (dominoInput);
                                     gameState.setLastPlayer(1);
                                     gameState.setTurnsWithoutPlay(0);
                                     gameState.setWhoseTurn(2);
                                 }
                                 else {
-                                    System.out.println("Incorrect move. Try again");
+                                    System.out.println
+                                            ("Incorrect move. Try again");
                                     nextTurn(gameState,board);
                                 }
                             }
@@ -109,7 +135,8 @@ public class TextCom {
                     }
                     else {
                         if(board.getBoneyard().size()!=0) {
-                            humanPlayer.getPlayerHand().add(board.getBoneyard().remove(0));
+                            humanPlayer.getPlayerHand().add
+                                    (board.getBoneyard().remove(0));
                             nextTurn(gameState, board);
                         }
                     }
@@ -131,10 +158,11 @@ public class TextCom {
                 System.out.println("Boneyard is empty and there are no" +
                         " available moves for the computer");
                 gameState.setWhoseTurn(1);
-                gameState.setTurnsWithoutPlay(gameState.getTurnsWithoutPlay()+1);
+                gameState.setTurnsWithoutPlay
+                        (gameState.getTurnsWithoutPlay()+1);
             }
             else {
-                computerPlayer.PlayDomino(board, gameState);
+                computerPlayer.playComputerDomino(board, gameState);
             }
         }
     }
